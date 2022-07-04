@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TodoInsert from './components/TodoInsert';
 import TodoList from './components/TodoList';
 import TodoTemplate from './components/TodoTemplate';
-
-
 
 const App = () => {
   const [todos, setTodos] = useState([
@@ -23,10 +21,23 @@ const App = () => {
       checked: false,
     }
   ])
+
+  const nextId = useRef(4);
+
+  const onInsert = text => {
+    const todo = {
+      id: nextId.current,
+      text,
+      checked: false
+    }
+    setValue(todos.concat(todo));
+    nextId.current += 1;
+  }
+
   return (
     <div>
       <TodoTemplate>
-        <TodoInsert />
+        <TodoInsert onInsert={onInsert} />
         <TodoList todos={todos} />
       </TodoTemplate>
     </div>
