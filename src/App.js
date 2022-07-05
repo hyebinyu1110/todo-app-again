@@ -3,27 +3,27 @@ import TodoInsert from './components/TodoInsert';
 import TodoList from './components/TodoList';
 import TodoTemplate from './components/TodoTemplate';
 
-
-const App = () => {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: '리액트 todolist 외우기',
-      checked: false,
-    },
-    {
-      id: 2,
-      text: '치아 닦기',
-      checked: true,
-    },
-    {
-      id: 3,
-      text: '메트로 폴리스 책 읽기',
+function createBulkTodos(){
+  const array = [];
+  for(let i =1; i<2500; i++){
+    const todo={
+      id: i,
+      text: `할 일 ${i}`,
       checked: false,
     }
-  ]);
 
-  const nextId = useRef(4);
+    array.push(todo);
+  }
+  return array;
+}
+  
+
+
+
+const App = () => {
+  const [todos, setTodos] = useState(createBulkTodos);
+
+  const nextId = useRef(2501);
 
   const onInsert = useCallback(
     text => {
@@ -32,25 +32,24 @@ const App = () => {
         text,
         checked: false,
       };
-      setTodos(todos.concat(todo));
+      setTodos(todos => todos.concat(todo));
       nextId.current += 1;
-    }, [todos])
+    }, [])
 
   const onRemove = useCallback(
     id => {
-      setTodos(todos.filter(
+      setTodos(todos => todos.filter(
         todo => (
           todo.id !== id
         )))
     }
-    , [todos]
+    , []
   );
 
   const onToggle = useCallback(
     id => {
-      setTodos(
-        todos.map(
-          todo => (
+      setTodos( todos =>
+        todos.map( todo => (
             todo.id === id ?
               {
                 ...todo,
@@ -59,7 +58,7 @@ const App = () => {
               : todo
           ))
       )
-    }, [todos]
+    }, []
   )
 
   return (
